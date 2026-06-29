@@ -5,10 +5,10 @@ public class ClickableCastle : MonoBehaviour, IClickable
 {
     public void OnClick()
     {
-        // Gücü istatistiklerden alýyoruz
-        double currentPower = GameController.Instance.Stats.CurrentClickPower;
+        // GÃ¼cÃ¼ istatistiklerden alÄ±yoruz
+        double currentPower = ServiceLocator.Resolve<PlayerStatsManager>().CurrentClickPower;
 
-        // Altýný cüzdana ekliyoruz
-        GameController.Instance.Currency.AddGold(currentPower);
+        // AltÄ±nÄ± cÃ¼zdana ekliyoruz
+        ServiceLocator.Resolve<CurrencyManager>().AddGold(currentPower);
     }
 }

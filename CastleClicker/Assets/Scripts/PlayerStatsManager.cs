@@ -3,22 +3,33 @@ using UnityEngine;
 
 public class PlayerStatsManager
 {
-    // Temel tıklama gücü (Upgrade edilebilir)
+    // Temel tÄ±klama gÃ¼cÃ¼ (Upgrade edilebilir)
     public double BaseClickPower { get; private set; }
 
-    // İleride "2 kat hasar/altın buff'ı" gelirse diye çarpan eklemek çok kolaylaşır
+    // TÄ±klama gÃ¼cÃ¼ Ã§arpanÄ± (Buff/Skill ile geÃ§ici artÄ±rÄ±labilir)
     public double ClickMultiplier { get; private set; }
 
-    // Mevcut toplam tıklama gücünü hesaplayan property
+    // Mevcut toplam tÄ±klama gÃ¼cÃ¼nÃ¼ hesaplayan property
     public double CurrentClickPower => BaseClickPower * ClickMultiplier;
 
-    // Stat değiştiğinde UI veya efektlerin tetiklenmesi için event
+    // Pasif saniyelik altÄ±n gÃ¼cÃ¼ (Binalar/Ä°ÅŸÃ§iler ile artÄ±rÄ±labilir)
+    public double PassiveGoldPower { get; private set; }
+
+    // Pasif saniyelik altÄ±n Ã§arpanÄ±
+    public double PassiveGoldMultiplier { get; private set; }
+
+    // Mevcut toplam saniyelik pasif geliri hesaplayan property
+    public double CurrentPassiveGold => PassiveGoldPower * PassiveGoldMultiplier;
+
+    // Stat deÄŸiÅŸtiÄŸinde UI veya efektlerin tetiklenmesi iÃ§in event
     public event Action OnStatsChanged;
 
     public PlayerStatsManager(double defaultClickPower = 1)
     {
-        BaseClickPower = 500_250;
+        BaseClickPower = defaultClickPower;
         ClickMultiplier = 1.0;
+        PassiveGoldPower = 0.0;
+        PassiveGoldMultiplier = 1.0;
     }
 
     public void IncreaseBaseClickPower(double amount)
@@ -32,6 +43,20 @@ public class PlayerStatsManager
     {
         if (multiplier < 0) return;
         ClickMultiplier = multiplier;
+        OnStatsChanged?.Invoke();
+    }
+
+    public void IncreasePassiveGoldPower(double amount)
+    {
+        if (amount <= 0) return;
+        PassiveGoldPower += amount;
+        OnStatsChanged?.Invoke();
+    }
+
+    public void SetPassiveGoldMultiplier(double multiplier)
+    {
+        if (multiplier < 0) return;
+        PassiveGoldMultiplier = multiplier;
         OnStatsChanged?.Invoke();
     }
 }
